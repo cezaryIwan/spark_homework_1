@@ -1,7 +1,6 @@
 from pyspark.sql.functions import expr
 from pyspark.sql import DataFrame
-
-from config import get_config
+import src.main.python.app_config as app_config
 
 class EncryptionService:
     def __init__(self):
@@ -20,7 +19,7 @@ class EncryptionService:
     
     @staticmethod
     def encrypt_fields(df: DataFrame, fields: list[str]) -> DataFrame:
-        key = get_config('AES_ENCRYPTION_KEY')
+        key = app_config['AES_ENCRYPTION_KEY'] 
         fields_to_encrypt = [f for f in fields if f in df.columns]
         for field in fields_to_encrypt:
             df = df.withColumn(

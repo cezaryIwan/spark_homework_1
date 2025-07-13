@@ -1,24 +1,24 @@
 from pyspark.sql import SparkSession
-from config import get_config
+from app_config import app_config
 from services.data_transformation_service import DataTransformationService
 from services.coordinates_service import CoordinatesService
 from services.encryption_service import EncryptionService
 
 # Create Spark session
-spark = SparkSession.builder.appName("Hotel ETL Job")\
+spark = SparkSession.builder.appName("Hotel-Weather ETL Job")\
 .config("spark.jars.packages", "org.apache.hadoop:hadoop-azure:3.3.4,com.microsoft.azure:azure-storage:8.6.6")\
     .getOrCreate()
 spark.conf.set(
-    f"fs.azure.account.key.{get_config('AZURE_STORAGE_ACCOUNT_NAME')}.blob.core.windows.net",
-    get_config("AZURE_STORAGE_ACCOUNT_KEY")
+    f"fs.azure.account.key.{app_config['AZURE_STORAGE_ACCOUNT_NAME']}.blob.core.windows.net",
+    app_config['AZURE_STORAGE_ACCOUNT_KEY']
 )
 
 data_transformation_service = DataTransformationService(spark)
 coordinates_service = CoordinatesService()
 encryption_service = EncryptionService()
 
-df_hotels = spark.read.option("header", True).csv(get_config('STORAGE_PATH') + get_config('STORAGE_HOTELS_SUBPATH'))
-df_weather = spark.read.parquet(get_config('STORAGE_PATH') + get_config('STORAGE_WEATHER_SUBPATH'))
+df_hotels = spark.read.option("header", True).csv(app_config['STORAGE_PATH'] + app_config['STORAGE_HOTELS_SUBPATH'] )
+df_weather = spark.read.parquet(app_config['STORAGE_PATH'] + app_config['STORAGE_WEATHER_SUBPATH'] )
 # To ensure consistency in column names and avoid dupliating values when joining with weather data
 df_hotels = df_hotels\
             .withColumnRenamed("Latitude", "lat")\
@@ -45,7 +45,7 @@ df_hotels_weather_encrypted = encryption_service.encrypt_fields(
 
 #Store enriched data
 df_hotels_weather_encrypted.write.mode("overwrite").parquet(
-    f"wasbs://{get_config('AZURE_CONTAINER_NAME')}@{get_config('AZURE_STORAGE_ACCOUNT_NAME')}.blob.core.windows.net/enriched_data"
+    f"wasbs://{app_config['AZURE_CONTAINER_NAME']}@{app_config['AZURE_STORAGE_ACCOUNT_NAME'] }.blob.core.windows.net/enriched_data"
 )
 
 

@@ -1,12 +1,11 @@
 import requests
-
-from config import get_config
+import src.main.python.app_config as app_config
 
 def get_response(address: str) -> dict | None:
     endpoint = "https://api.opencagedata.com/geocode/v1/json"
     params = {
         "q": address,
-        "key": get_config("OPENCAGE_API_KEY"),
+        "key": app_config['OPENCAGE_API_KEY'],
         "limit": 1,
         "no_annotations": 1
     }
