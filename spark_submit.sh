@@ -1,0 +1,36 @@
+#!/bin/bash
+/opt/spark/bin/spark-submit \
+    --master k8s://https://bdccdev-wqomxngk.hcp.westeurope.azmk8s.io:443 \
+    --deploy-mode cluster \
+    --name sparkbasics \
+    --conf spark.kubernetes.container.image=acrdevwesteuropeykw2.azurecr.io/spark-python-06:latest \
+    --conf spark.kubernetes.driver.request.cores=500m \
+    --conf spark.kubernetes.driver.request.memory=500m \
+    --conf spark.kubernetes.executor.request.memory=500m \
+    --conf spark.kubernetes.executor.request.cores=500m \
+    --conf spark.kubernetes.namespace=default \
+    --conf spark.kubernetes.authenticate.driver.serviceAccountName=spark \
+    --conf spark.kubernetes.driver.pod.name=spark-driver \
+    --conf spark.kubernetes.executor.instances=1 \
+    --conf spark.pyspark.python=python3 \
+    --conf spark.pyspark.driver.python=python3 \
+    --conf spark.kubernetes.driverEnvFrom=configmap:spark-env \
+    --conf spark.kubernetes.executorEnvFrom=configmap:spark-env \
+    --conf spark.kubernetes.driverEnv.AZURE_STORAGE_ACCOUNT_NAME=<STORAGE_ACCOUNT_NAME> \
+    --conf spark.kubernetes.driverEnv.AZURE_STORAGE_ACCOUNT_KEY=<STORAGE_ACCOUNT_KEY> \
+    --conf spark.kubernetes.driverEnv.AZURE_CONTAINER_NAME=data \
+    --conf spark.kubernetes.driverEnv.AES_ENCRYPTION_KEY=<KEY_FOR_PII_FIELDS_ENCRYPTION> \
+    --conf spark.kubernetes.driverEnv.STORAGE_PATH=<STORAGE_PATH> \
+    --conf spark.kubernetes.driverEnv.STORAGE_WEATHER_SUBPATH=m06sparkbasics/weather \
+    --conf spark.kubernetes.driverEnv.STORAGE_HOTELS_SUBPATH=m06sparkbasics/hotels \
+    --conf spark.kubernetes.driverEnv.OPENCAGE_API_KEY=<OPENCAGE_API_KEY> \
+    --conf spark.kubernetes.executorEnv.AZURE_STORAGE_ACCOUNT_NAME=stdevwesteuropeykw2 \
+    --conf spark.kubernetes.executorEnv.AZURE_STORAGE_ACCOUNT_KEY=<STORAGE_ACCOUNT_KEY> \
+    --conf spark.kubernetes.executorEnv.AZURE_CONTAINER_NAME=data \
+    --conf spark.kubernetes.executorEnv.AES_ENCRYPTION_KEY=<KEY_FOR_PII_FIELDS_ENCRYPTION> \
+    --conf spark.kubernetes.executorEnv.STORAGE_PATH=<STORAGE_PATH> \
+    --conf spark.kubernetes.executorEnv.STORAGE_WEATHER_SUBPATH=m06sparkbasics/weather \
+    --conf spark.kubernetes.executorEnv.STORAGE_HOTELS_SUBPATH=m06sparkbasics/hotels \
+    --conf spark.kubernetes.executorEnv.OPENCAGE_API_KEY=<OPENCAGE_API_KEY> \
+    --py-files local:///opt/sparkbasics-1.0.0-py3.12.egg \
+    local:///opt/src/main/python/main.py
