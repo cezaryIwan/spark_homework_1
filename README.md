@@ -1,10 +1,10 @@
-ETL is divided into 6 individual steps separated with comments:
--setup
--filling empty coordinates in hotels data
--add geocash to hotel and weather data
--joining hotel and weather data
--encryption of PII data
--storing data
+ETL is divided into 6 individual steps separated with comments:<br>
+-setup<br>
+-filling empty coordinates in hotels data<br>
+-add geocash to hotel and weather data<br>
+-joining hotel and weather data<br>
+-encryption of PII data<br>
+-storing data<br>
 
 Connecting to OpenCage API might fail, due to usage limitations, after a set number of invocations it returns 402 status responce.
 
@@ -21,3 +21,12 @@ Usage guide:
 3. Launch Spark app with spark_submit.sh script, and remember to replace placeholders with actual secrets and adjust paths. Script is mostly spark-submit configuration from README mentioned above, but with additional environment variables. Remember also to delete pod with `kubectl delete pod <POD_NAME>`, if you are launching app again.
 4. Verify logs with `kubectl logs <POD_NAME>`.
 5. Verify result data under "data" container on Azure Storage. There should be additional directory called "enriched_data" with data prcessed by your ETL job.
+
+Issues section:<br>
+1. Issue with building docker image after corrections:<br>
+Problem:<br>
+After building a docker image and deploying it to AKS, it threw me an error, saying that it is not able to resolve environment variable froma main.py file line 12:  <br>
+`f"fs.azure.account.key.{app_config['AZURE_STORAGE_ACCOUNT_NAME']}.blob.core.windows.net",`<br>
+After code adjustments, image didn't use new version of code, even thought I rebuild egg file, checked if it contains correct version of code, rebuild docker image with --no-cache flag on and pushed it again on AKS.
+Solution:<br>
+TBD
