@@ -28,5 +28,37 @@ Problem:<br>
 After building a docker image and deploying it to AKS, it threw me an error, saying that it is not able to resolve environment variable froma main.py file line 12:  <br>
 `f"fs.azure.account.key.{app_config['AZURE_STORAGE_ACCOUNT_NAME']}.blob.core.windows.net",`<br>
 After code adjustments, image didn't use new version of code, even thought I rebuild egg file, checked if it contains correct version of code, rebuild docker image with --no-cache flag on and pushed it again on AKS.
+<br>
+Steps:
+1. Starting with empty /docker/dist folder, so I'm sure .egg file is freshly generated.
+<img width="537" height="294" alt="image" src="https://github.com/user-attachments/assets/0c63f7da-c6fa-4428-b01a-345deb0ac97b" />
+Ran the following command to generate the .egg file:
+`python3 setup.py bdist_egg`
+Result:
+<img width="437" height="269" alt="image" src="https://github.com/user-attachments/assets/3e603ab8-c330-4af5-80d0-d67e79042541" /> <br>
+2. Verified .egg contents:
+`unzip -d /tmp/egg_out docker/dist/sparkbasics-*.egg`
+<img width="885" height="334" alt="image" src="https://github.com/user-attachments/assets/3732e8ae-ad41-4ba1-991a-7908c34effb7" />
+Here we can see updated version of code with app_config name, not config, which will be thrown in k8s pod's logs later. <br>
+3. Build Docker image using command from project's repository with additional --no-cache flag, to ensure newly generated .egg file is used:
+`docker build \
+  --no-cache \
+  -t acrdevwesteuropeykw2.azurecr.io/spark-python-06:v2 \
+  -f docker/Dockerfile \
+  docker/ --build-context extra-source=./`
+Result:
+<img width="1375" height="691" alt="image" src="https://github.com/user-attachments/assets/92c02be9-28d4-48bd-9ab5-5a0b5cbe4436" />
+
+4. Ensured correct format of scripts:
+`dos2unix docker/*.sh`
+5. Logged in to Azure Container Registry:
+`az acr login --name acrdevwesteuropeykw2`
+6.
+
+
+
+
+
+
 Solution:<br>
 TBD
