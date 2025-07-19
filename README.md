@@ -1,3 +1,106 @@
+Setup:
+1. `terraform destroy`: <br>
+```
+(venv) cezary@ubuntuserver:~/spark_homeworks/m06_sparkbasics_python_azure/terraform$ terraform destroy
+Acquiring state lock. This may take a few moments...
+random_string.suffix: Refreshing state... [id=ykw2]
+data.azurerm_client_config.current: Reading...
+azurerm_resource_group.bdcc: Refreshing state... [id=/subscriptions/79087556-22ac-4667-a08e-e3d826d18e54/resourceGroups/rg-dev-westeurope-ykw2]
+data.azurerm_client_config.current: Read complete after 0s [id=Y2xpZW50Q29uZmlncy9jbGllbnRJZD0wNGIwNzc5NS04ZGRiLTQ2MWEtYmJlZS0wMmY5ZTFiZjdiNDY7b2JqZWN0SWQ9MDk0YTQxZWUtYzFkYy00Y2M2LTgwYTctN2JkYWIzN2Y0MTM2O3N1YnNjcmlwdGlvbklkPTc5MDg3NTU2LTIyYWMtNDY2Ny1hMDhlLWUzZDgyNmQxOGU1NDt0ZW5hbnRJZD1lNTYzNTA4ZS02OTYyLTRmODYtOWE5OC1mN2JhOTViYTk1ZTU=]
+azurerm_container_registry.acr: Refreshing state... [id=/subscriptions/79087556-22ac-4667-a08e-e3d826d18e54/resourceGroups/rg-dev-westeurope-ykw2/providers/Microsoft.ContainerRegistry/registries/acrdevwesteuropeykw2]
+azurerm_storage_account.bdcc: Refreshing state... [id=/subscriptions/79087556-22ac-4667-a08e-e3d826d18e54/resourceGroups/rg-dev-westeurope-ykw2/providers/Microsoft.Storage/storageAccounts/stdevwesteuropeykw2]
+azurerm_kubernetes_cluster.bdcc: Refreshing state... [id=/subscriptions/79087556-22ac-4667-a08e-e3d826d18e54/resourceGroups/rg-dev-westeurope-ykw2/providers/Microsoft.ContainerService/managedClusters/aks-dev-westeurope-ykw2]
+azurerm_storage_data_lake_gen2_filesystem.gen2_data: Refreshing state... [id=https://stdevwesteuropeykw2.dfs.core.windows.net/data]
+azurerm_role_assignment.aks_acr_pull: Refreshing state... [id=/subscriptions/79087556-22ac-4667-a08e-e3d826d18e54/resourceGroups/rg-dev-westeurope-ykw2/providers/Microsoft.ContainerRegistry/registries/acrdevwesteuropeykw2/providers/Microsoft.Authorization/roleAssignments/b46e3b54-cfc9-62e1-5733-46def57d03d1]
+kubernetes_service_account.spark: Refreshing state... [id=default/spark]
+kubernetes_cluster_role.spark_role: Refreshing state... [id=spark-role]
+kubernetes_cluster_role_binding.spark_role_binding: Refreshing state... [id=spark-role-binding]
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
+  - destroy
+
+Terraform will perform the following actions:
+
+  # azurerm_container_registry.acr will be destroyed
+  - resource "azurerm_container_registry" "acr" {
+      - admin_enabled                 = false -> null
+      - anonymous_pull_enabled        = false -> null
+      - data_endpoint_enabled         = false -> null
+      - encryption                    = [] -> null
+      - export_policy_enabled         = true -> null
+      - id                            = "/subscriptions/79087556-22ac-4667-a08e-e3d826d18e54/resourceGroups/rg-dev-westeurope-ykw2/providers/Microsoft.ContainerRegistry/registries/acrdevwesteuropeykw2" -> null
+
+...
+
+azurerm_kubernetes_cluster.bdcc: Still destroying... [id=/subscriptions/79087556-22ac-4667-a08e-...anagedClusters/aks-dev-westeurope-ykw2, 04m21s elapsed]
+azurerm_kubernetes_cluster.bdcc: Still destroying... [id=/subscriptions/79087556-22ac-4667-a08e-...anagedClusters/aks-dev-westeurope-ykw2, 04m31s elapsed]
+azurerm_kubernetes_cluster.bdcc: Destruction complete after 4m34s
+azurerm_resource_group.bdcc: Destroying... [id=/subscriptions/79087556-22ac-4667-a08e-e3d826d18e54/resourceGroups/rg-dev-westeurope-ykw2]
+azurerm_resource_group.bdcc: Still destroying... [id=/subscriptions/79087556-22ac-4667-a08e-.../resourceGroups/rg-dev-westeurope-ykw2, 00m10s elapsed]
+azurerm_resource_group.bdcc: Still destroying... [id=/subscriptions/79087556-22ac-4667-a08e-.../resourceGroups/rg-dev-westeurope-ykw2, 00m20s elapsed]
+azurerm_resource_group.bdcc: Still destroying... [id=/subscriptions/79087556-22ac-4667-a08e-.../resourceGroups/rg-dev-westeurope-ykw2, 00m30s elapsed]
+azurerm_resource_group.bdcc: Still destroying... [id=/subscriptions/79087556-22ac-4667-a08e-.../resourceGroups/rg-dev-westeurope-ykw2, 00m40s elapsed]
+azurerm_resource_group.bdcc: Destruction complete after 46s
+random_string.suffix: Destroying... [id=ykw2]
+random_string.suffix: Destruction complete after 0s
+Releasing state lock. This may take a few moments...
+
+Destroy complete! Resources: 10 destroyed.
+
+```
+2. Destroy remaining resources on cloud: <br>
+<img width="1063" height="200" alt="image" src="https://github.com/user-attachments/assets/d2f9b7b2-958e-463e-afd3-0bcf9f9925a1" /> <br>
+
+
+3. `az group create --name sparkhm1 --location polandcentral`: <br>
+```
+
+{
+  "id": "/subscriptions/79087556-22ac-4667-a08e-e3d826d18e54/resourceGroups/sparkhm1",
+  "location": "polandcentral",
+  "managedBy": null,
+  "name": "sparkhm1",
+  "properties": {
+    "provisioningState": "Succeeded"
+  },
+  "tags": null,
+  "type": "Microsoft.Resources/resourceGroups"
+}
+
+```
+4. `az storage account create --name hwsparkcezarysa --resource-group sparkhm1 --location polandcentral --sku Standard_LRS`: <br>
+```
+
+/opt/az/lib/python3.12/site-packages/azure/multiapi/storagev2/fileshare/__init__.py:1: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  __import__('pkg_resources').declare_namespace(__name__)
+{
+  "accessTier": "Hot",
+
+...
+
+  "type": "Microsoft.Storage/storageAccounts"
+}
+```
+5. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ETL is divided into 6 individual steps separated with comments:<br>
 -setup<br>
 -filling empty coordinates in hotels data<br>
