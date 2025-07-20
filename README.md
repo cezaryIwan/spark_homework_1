@@ -1,4 +1,14 @@
-Setup:
+ETL is divided into 6 individual steps separated with comments:<br>
+-setup<br>
+-filling empty coordinates in hotels data<br>
+-add geocash to hotel and weather data<br>
+-joining hotel and weather data<br>
+-encryption of PII data<br>
+-storing data<br>
+
+Connecting to OpenCage API might fail, due to usage limitations, after a set number of invocations it returns 402 status responce. <br>
+
+Setup: <br>
 1. `terraform destroy`: <br>
 ```
 (venv) cezary@ubuntuserver:~/spark_homeworks/m06_sparkbasics_python_azure/terraform$ terraform destroy
@@ -81,49 +91,77 @@ Destroy complete! Resources: 10 destroyed.
   "type": "Microsoft.Storage/storageAccounts"
 }
 ```
-5. 
+5.  `az storage container create --name hwsparkcezarycontainer --account-name hwsparkcezarysa`: <br>
+```
 
+/opt/az/lib/python3.12/site-packages/azure/multiapi/storagev2/fileshare/__init__.py:1: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  __import__('pkg_resources').declare_namespace(__name__)
 
+There are no credentials provided in your command and environment, we will query for account key for your storage account.
+It is recommended to provide --connection-string, --account-key or --sas-token in your command as credentials.
 
+You also can add `--auth-mode login` in your command to use Azure Active Directory (Azure AD) for authorization if your login account is assigned required RBAC roles.
+For more information about RBAC roles in storage, visit https://learn.microsoft.com/azure/storage/common/storage-auth-aad-rbac-cli.
 
+In addition, setting the corresponding environment variables can avoid inputting credentials in your command. Please use --help to get more information about environment variable usage.
+{
+  "created": true
+}
 
+```
+6. Fill placeholders in main.tf file
+7. `terraform init`: <br>
+<img width="689" height="326" alt="image" src="https://github.com/user-attachments/assets/d1e40a97-21ba-4781-97da-1bffd47871c7" /> <br>
+8. `terraform plan -out terraform.plan`: <br>
+<img width="561" height="105" alt="image" src="https://github.com/user-attachments/assets/1cf6c212-3203-4250-82ae-4b246ea09710" /> <br>
+9. `terraform apply terraform.plan`: <br>
+<img width="606" height="155" alt="image" src="https://github.com/user-attachments/assets/a14660ff-a09d-40cb-a3ac-8d7872c682f8" /> <br>
+10. List resource groups with creation time (simple grouping bash command, made by AI chat): <br>
+<img width="950" height="110" alt="image" src="https://github.com/user-attachments/assets/dac48cfc-af7f-46d1-af9d-dfce99e2b830" /> <br>
+11. ACR login: <br>
+<img width="982" height="58" alt="image" src="https://github.com/user-attachments/assets/d265ecd7-6172-450c-906a-94ddbc8a7598" /> <br>
+12. Upload files to 'data' container: <br>
+<img width="331" height="362" alt="image" src="https://github.com/user-attachments/assets/94c0952c-9c08-4f9b-bea8-96845d674795" /> <br>
+13. Create python venv: <br>
+<img width="677" height="66" alt="image" src="https://github.com/user-attachments/assets/48822be6-3f89-4d43-b311-112e24c0eb21" /> <br>
 
+--- AT THIS POINT DEVELOP AND TEST YOUR ETL AND THEN MOVE ON ---
 
+14. Install requirements.txt (I updated requirements after completion of ETL with freeze > requirements.txt): <br>
+```
 
+(venv) cezary@ubuntuserver:~/spark_homeworks/m06_sparkbasics_python_azure$ pip install -r requirements.txt
+Collecting aiohappyeyeballs==2.6.1 (from -r requirements.txt (line 1))
+  Using cached aiohappyeyeballs-2.6.1-py3-none-any.whl.metadata (5.9 kB)
 
+...
 
+Installing collected packages: py4j, wheel, urllib3, tqdm, setuptools, python-dotenv, pyspark, Pygments, pygeohash, propcache, pluggy, packaging, multidict, iniconfig, idna, frozenlist, charset-normalizer, certifi, backoff, attrs, aiohappyeyeballs, yarl, requests, pytest, dotenv, aiosignal, aiohttp, opencage
+Successfully installed Pygments-2.19.2 aiohappyeyeballs-2.6.1 aiohttp-3.12.12 aiosignal-1.3.2 attrs-25.3.0 backoff-2.2.1 certifi-2025.4.26 charset-normalizer-3.4.2 dotenv-0.9.9 frozenlist-1.7.0 idna-3.10 iniconfig-2.1.0 multidict-6.4.4 opencage-3.2.0 packaging-25.0 pluggy-1.6.0 propcache-0.3.2 py4j-0.10.9.9 pygeohash-3.1.3 pyspark-4.0.0 pytest-8.4.1 python-dotenv-1.1.1 requests-2.32.4 setuptools-80.9.0 tqdm-4.67.1 urllib3-2.4.0 wheel-0.45.1 yarl-1.20.1
 
+```
+15. `python3 setup.py bdist_egg`: <br>
+```
 
+running bdist_egg
+running egg_info
+writing src/sparkbasics.egg-info/PKG-INFO
+writing dependency_links to src/sparkbasics.egg-info/dependency_links.txt
+writing top-level names to src/sparkbasics.egg-info/top_level.txt
 
+...
 
+byte-compiling build/bdist.linux-x86_64/egg/test/test_encryption_service.py to test_encryption_service.cpython-312.pyc
+creating build/bdist.linux-x86_64/egg/EGG-INFO
+copying src/sparkbasics.egg-info/PKG-INFO -> build/bdist.linux-x86_64/egg/EGG-INFO
+copying src/sparkbasics.egg-info/SOURCES.txt -> build/bdist.linux-x86_64/egg/EGG-INFO
+copying src/sparkbasics.egg-info/dependency_links.txt -> build/bdist.linux-x86_64/egg/EGG-INFO
+copying src/sparkbasics.egg-info/not-zip-safe -> build/bdist.linux-x86_64/egg/EGG-INFO
+copying src/sparkbasics.egg-info/top_level.txt -> build/bdist.linux-x86_64/egg/EGG-INFO
+creating 'dist/sparkbasics-1.0.0-py3.12.egg' and adding 'build/bdist.linux-x86_64/egg' to it
+removing 'build/bdist.linux-x86_64/egg' (and everything under it)
 
-
-
-
-
-ETL is divided into 6 individual steps separated with comments:<br>
--setup<br>
--filling empty coordinates in hotels data<br>
--add geocash to hotel and weather data<br>
--joining hotel and weather data<br>
--encryption of PII data<br>
--storing data<br>
-
-Connecting to OpenCage API might fail, due to usage limitations, after a set number of invocations it returns 402 status responce.
-
-Usage guide:
-1. Follow https://git.epam.com/epmc-bdcc/trainings/bd201/m06_sparkbasics_python_azure project README instructions strictly, up to step 8. After completing those instructions, you should have already configured and running: <br>
-  - Resource Group: <br>
-  <img width="782" height="173" alt="image" src="https://github.com/user-attachments/assets/d63fc551-a534-4e15-9171-2477cd9ce982" /> <br>
-  - Container Registry, Kubernetes Service and Storage Account within that Resource Group: <br>
-  <img width="961" height="201" alt="image" src="https://github.com/user-attachments/assets/ffda376b-2fb0-4a5e-b94f-8f76532b088a" /> <br>
-  - Data injected to "data" Container on your Storage Account: <br>
-  <img width="667" height="499" alt="image" src="https://github.com/user-attachments/assets/47e1a7be-18c1-413d-91be-999c7b9a42e3" /> <br>
-
-  
-3. Launch Spark app with spark_submit.sh script, and remember to replace placeholders with actual secrets and adjust paths. Script is mostly spark-submit configuration from README mentioned above, but with additional environment variables. Remember also to delete pod with `kubectl delete pod <POD_NAME>`, if you are launching app again. <br>
-4. Verify logs with `kubectl logs <POD_NAME>`. <br>
-5. Verify result data under "data" container on Azure Storage. There should be additional directory called "enriched_data" with data prcessed by your ETL job. <br>
+```
 
 Issues section:<br>
 1. Issue with building docker image after corrections:<br>
@@ -135,17 +173,12 @@ After code adjustments and changing name of config file to app_config: <br>
 image didn't use new version of code, even thought I rebuild egg file, checked if it contains correct version of code, rebuild docker image with --no-cache flag on and pushed it again on AKS. <br>
 
 Steps:
-1. Starting with empty /docker/dist folder, so I'm sure .egg file is freshly generated. <br>
-<img width="537" height="294" alt="image" src="https://github.com/user-attachments/assets/0c63f7da-c6fa-4428-b01a-345deb0ac97b" /> <br>
-Ran the following command to generate the .egg file: <br>
-`python3 setup.py bdist_egg`
-Result: <br>
-<img width="437" height="269" alt="image" src="https://github.com/user-attachments/assets/3e603ab8-c330-4af5-80d0-d67e79042541" /> <br>
+1. Follow "Setup" section from above, this way you should have already created .egg file of your ETL
 2. Verified .egg contents: <br>
 `unzip -d /tmp/egg_out docker/dist/sparkbasics-*.egg`
 <img width="885" height="334" alt="image" src="https://github.com/user-attachments/assets/3732e8ae-ad41-4ba1-991a-7908c34effb7" /> <br>
 Here we can see updated version of code with app_config name, not config, which will be thrown in k8s pod's logs later. <br>
-3. Build Docker image using command from project's repository with additional --no-cache flag, to ensure newly generated .egg file is used: <br>
+3. Build Docker image using command from project's repository with additional --no-cache flag, to ensure newly generated .egg file is used (rememver to move or copy "requirements.txt" to "docker" folder): <br>
 
 ```bash
 docker build \
