@@ -331,7 +331,7 @@ Logs: <br>
 <br>
 It seems that for some reason spark job is using old version of code. I assume that, because logs the old name of config file is logged (config) not new one (app_cofing). <br>
 Solution:<br>
-TBD
+Add `--conf spark.kubernetes.container.image.pullPolicy=Always` to spark-submit variables.
 <br>
 Working with completed ETL on cloud: <br>
 1. Set node pool to autoscale, as 1 node was not sufficient: <br>
@@ -340,7 +340,10 @@ Working with completed ETL on cloud: <br>
 <img width="1838" height="599" alt="image" src="https://github.com/user-attachments/assets/7445d90c-176c-4975-aafc-f253585c1b0e" /> <br>
 3. Set node cout to 2, and disabled autoscaling since I cannot go for more than 2 nodes anyway and don't need azure to scale down for this exercise: <br>
 <img width="640" height="524" alt="image" src="https://github.com/user-attachments/assets/c4bf6e2a-fc6c-4dda-86a3-65b94f2b45fa" /> <br>
-4. Now spark do not see my services, in built  image: <br>
+4. Pod throw MountVolume.SetUp error briefly after pod creation: <br>
+<img width="437" height="115" alt="image" src="https://github.com/user-attachments/assets/c7450d40-22df-4498-8d7a-39fa8f1727d4" /> <br>
+ I spent some time on it, and this configmap do exist. Also pod is not interrupted after all and it continues to work, so I assume, that spark tries to get this config map before it's created, throw some warnings then map is created and pod continues to work. <br>
+5. Now spark do not see my services, in built  image: <br>
 
 ```
 
@@ -351,27 +354,29 @@ ModuleNotFoundError: No module named 'services'
 ``` 
 
 <br>
-5. I might adjust path i setup.py, adjust submit script and keep shorter imports, but I don't mind longer imports on this homework so I will adjust paths in my python files e.g.: <br>
+6. I might adjust path i setup.py, adjust submit script and keep shorter imports, but I don't mind longer imports on this homework so I will adjust paths in my python files e.g.: <br>
 <img width="796" height="188" alt="image" src="https://github.com/user-attachments/assets/64d1bae2-8d34-4206-bd05-a685fa3d2e22" /> <br>
-6. After building image and running it on AKS, still exactly the same error from 4. is thrown, unzipping and checking .egg file: <br>
+7. After building image and running it on AKS, still exactly the same error from 4. is thrown, unzipping and checking .egg file: <br>
 <img width="1032" height="47" alt="image" src="https://github.com/user-attachments/assets/e7c551c8-e46d-4424-875d-1c2eb37a7896" /> <br>
 <img width="812" height="209" alt="image" src="https://github.com/user-attachments/assets/d0edd44b-801e-4475-9215-1dcba13ce993" /> <br>
-7. .egg from local files seems fine, checking files from faulty pod: <br>
+8. .egg from local files seems fine, checking files from faulty pod: <br>
 <img width="1089" height="75" alt="image" src="https://github.com/user-attachments/assets/7ecd0945-c4a1-4b07-bde9-670cb05b138c" /> <br>
 <img width="698" height="52" alt="image" src="https://github.com/user-attachments/assets/dd50295c-c454-46b1-821f-88bf190855b7" /> <br>
 <img width="1206" height="36" alt="image" src="https://github.com/user-attachments/assets/0b767f5b-3d48-4cbc-ae73-79332d3c1c83" /> <br>
 <img width="757" height="44" alt="image" src="https://github.com/user-attachments/assets/edea75cc-95a9-45a2-9579-6e42eec0e0a4" /> <br>
 <img width="742" height="153" alt="image" src="https://github.com/user-attachments/assets/021955ac-a13e-4036-be26-6c33cdddb575" /> <br>
-8. pod on AKS have falty, not updated version of code, checking image i built locally:  <br>
+9. pod on AKS have falty, not updated version of code, checking image i built locally:  <br>
 <img width="844" height="59" alt="image" src="https://github.com/user-attachments/assets/8fef9c95-6473-49fd-ae3c-c88fb7166c06" /> <br>
 <img width="846" height="59" alt="image" src="https://github.com/user-attachments/assets/82584945-3ed9-4ca8-8ac3-7842159a0127" /> <br>
 <img width="849" height="73" alt="image" src="https://github.com/user-attachments/assets/9186b09d-bac0-4f8c-be92-e3c5968f9556" /> <br>
 <img width="788" height="152" alt="image" src="https://github.com/user-attachments/assets/0a8a5fb2-6ebd-44a1-aa21-b3af3c5c7c9b" /> <br>
-9. Local image is fine, checking image on ACR:  <br>
+10. Local image is fine, checking image on ACR:  <br>
 <img width="842" height="109" alt="image" src="https://github.com/user-attachments/assets/606a54e7-1f6d-4973-ac61-19071514ddd5" /> <br>
 My image locally and on ACR have identical "digest", so they have to be identical itself - for some reason, I have updated image on registry, but AKS is using an obsolited image. It would make sense, that after recreation of infra it worked, as I assume AKS uses cached image with faulty code <br>
-10. Trying submitting with forced pulling: <br>
+11. Trying submitting with forced pulling: <br>
 <img width="809" height="38" alt="image" src="https://github.com/user-attachments/assets/e318778b-b1cb-4653-8534-a9b5ac73a273" /> <br>
+Different error is thrown with snippet of updated code, so image updates correctly: <br>
+<img width="600" height="151" alt="image" src="https://github.com/user-attachments/assets/1ade48d2-ac7c-41bd-ba2d-d6ea4525dd84" /> <br?
 
 
 
