@@ -335,16 +335,24 @@ TBD
 <br>
 Working with completed ETL on cloud: <br>
 1. Set node pool to autoscale, as 1 node was not sufficient: <br>
-<img width="565" height="455" alt="image" src="https://github.com/user-attachments/assets/eace7e1e-e704-4daf-af4e-fb6463d150ba" />
-2. Scaled down resources in spark_submit.sh: <br>
-<img width="702" height="222" alt="image" src="https://github.com/user-attachments/assets/60e3344a-bd6d-48bf-87fd-cf37c782851f" /> <br>
-Because of error: <br>
+<img width="565" height="455" alt="image" src="https://github.com/user-attachments/assets/eace7e1e-e704-4daf-af4e-fb6463d150ba" /> <br>
+2. Autoscale tried to use more than 2 nodes, which was too much for my subscription's quota: <br>
 <img width="1838" height="599" alt="image" src="https://github.com/user-attachments/assets/7445d90c-176c-4975-aafc-f253585c1b0e" /> <br>
-3. Created new node pool and set spark_submit.sh to use it: <br>
-<img width="586" height="56" alt="image" src="https://github.com/user-attachments/assets/70b655ef-5947-4fcc-ab18-19625db614ff" /> <br>
-Because of error: <br>
-<img width="471" height="531" alt="image" src="https://github.com/user-attachments/assets/55b8b1f7-6e5f-4204-9d52-2c4c01ef30eb" /> <br>
-4.
+3. Set node cout to 2, and disabled autoscaling since I cannot go for more than 2 nodes anyway and don't need azure to scale down for this exercise: <br>
+<img width="640" height="524" alt="image" src="https://github.com/user-attachments/assets/c4bf6e2a-fc6c-4dda-86a3-65b94f2b45fa" /> <br>
+4. Now spark do not see my services, in built  image: <br>
+
+```
+
+  File "/opt/spark/python/lib/pyspark.zip/pyspark/serializers.py", line 472, in loads
+    return cloudpickle.loads(obj, encoding=encoding)
+ModuleNotFoundError: No module named 'services'
+
+``` 
+
+<br>
+5. I might adjust path i setup.py, adjust submit script and keep shorter imports, but I don't mind longer imports on this homework so I will adjust paths in my python files e.g.: <br>
+<img width="796" height="188" alt="image" src="https://github.com/user-attachments/assets/64d1bae2-8d34-4206-bd05-a685fa3d2e22" />
 
 
 
