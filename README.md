@@ -376,7 +376,7 @@ My image locally and on ACR have identical "digest", so they have to be identica
 11. Trying submitting with forced pulling: <br>
 <img width="809" height="38" alt="image" src="https://github.com/user-attachments/assets/e318778b-b1cb-4653-8534-a9b5ac73a273" /> <br>
 Different error is thrown with snippet of updated code, so image updates correctly: <br>
-<img width="600" height="151" alt="image" src="https://github.com/user-attachments/assets/1ade48d2-ac7c-41bd-ba2d-d6ea4525dd84" /> <br?
+<img width="600" height="151" alt="image" src="https://github.com/user-attachments/assets/1ade48d2-ac7c-41bd-ba2d-d6ea4525dd84" /> <br>
 
 
 
