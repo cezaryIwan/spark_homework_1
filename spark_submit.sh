@@ -1,9 +1,10 @@
 #!/bin/bash
 /opt/spark/bin/spark-submit \
-    --master k8s://https://bdccdev-wqomxngk.hcp.westeurope.azmk8s.io:443 \
+    --master k8s://https://bdccdev-zo9y584k.hcp.westeurope.azmk8s.io:443 \
     --deploy-mode cluster \
     --name sparkbasics \
-    --conf spark.kubernetes.container.image=acrdevwesteuropeykw2.azurecr.io/spark-python-06:latest \
+    --conf spark.kubernetes.container.image=acrdevwesteurope9lmi.azurecr.io/spark-python-06:latest \
+    --conf spark.kubernetes.container.image.pullPolicy=Always \
     --conf spark.kubernetes.driver.request.cores=500m \
     --conf spark.kubernetes.driver.request.memory=500m \
     --conf spark.kubernetes.executor.request.memory=500m \
@@ -14,8 +15,6 @@
     --conf spark.kubernetes.executor.instances=1 \
     --conf spark.pyspark.python=python3 \
     --conf spark.pyspark.driver.python=python3 \
-    --conf spark.kubernetes.driverEnvFrom=configmap:spark-env \
-    --conf spark.kubernetes.executorEnvFrom=configmap:spark-env \
     --conf spark.kubernetes.driverEnv.AZURE_STORAGE_ACCOUNT_NAME=<STORAGE_ACCOUNT_NAME> \
     --conf spark.kubernetes.driverEnv.AZURE_STORAGE_ACCOUNT_KEY=<STORAGE_ACCOUNT_KEY> \
     --conf spark.kubernetes.driverEnv.AZURE_CONTAINER_NAME=data \
