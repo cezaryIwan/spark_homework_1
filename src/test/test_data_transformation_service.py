@@ -39,7 +39,7 @@ def test_join_hotels_with_weather_by_geohash(spark, data_transformation_service)
         
     weather_df = spark\
         .read.option("header", True)\
-        .csv("src/test/resources/test_data_weather.csv", inferSchema=True)
+        .csv("src/test/resources/test_data_weather_geohash.csv", inferSchema=True)
 
     result_df = data_transformation_service.join_hotels_with_weather_by_geohash(hotels_df, weather_df)
 
