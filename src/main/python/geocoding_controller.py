@@ -1,5 +1,5 @@
 import requests
-import src.main.python.app_config as app_config
+from app_config import app_config
 
 def get_response(address: str) -> dict | None:
     endpoint = "https://api.opencagedata.com/geocode/v1/json"
@@ -13,5 +13,6 @@ def get_response(address: str) -> dict | None:
         response = requests.get(endpoint, params=params)
         response.raise_for_status()
         return response.json()
-    except requests.RequestException:
+    except requests.RequestException as e:
+        print(f"Error fetching geocoding data for '{address}': {e}")
         return None

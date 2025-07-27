@@ -1,4 +1,4 @@
-from geocoding_controller import  get_response
+from geocoding_controller import get_response
 
 def get_coordinates(address: str) -> dict[str, float] | None:
     response = get_response(address)

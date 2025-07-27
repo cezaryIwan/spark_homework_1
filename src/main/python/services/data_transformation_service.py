@@ -17,8 +17,11 @@ class DataTransformationService:
         if lat is None or lng is None:
             return None
         try:
-            return pygeohash.encode(lat, lng, precision=4)
-        except Exception:
+            hash = pygeohash.encode(lat, lng, precision=4)
+            print(f"Geohash for lat: {lat}, lng: {lng} is {hash}")
+            return hash
+        except Exception as e:
+            print(f"Error encoding geohash for lat: {lat}, lng: {lng} - {e}")
             return None
         
     def join_hotels_with_weather_by_geohash(self, hotels_df: DataFrame, weather_df: DataFrame) -> DataFrame:

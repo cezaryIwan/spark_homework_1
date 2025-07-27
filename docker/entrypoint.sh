@@ -67,6 +67,8 @@ elif ! [ -z ${SPARK_HOME+x} ]; then
   SPARK_CLASSPATH="$SPARK_HOME/conf:$SPARK_CLASSPATH";
 fi
 
+export PYTHONPATH=/opt/sparkbasics-1.0.0-py3.12.egg:$PYTHONPATH
+
 case "$1" in
   driver)
     shift 1

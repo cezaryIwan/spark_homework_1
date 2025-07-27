@@ -22,14 +22,14 @@ class bdist_egg(_bdist_egg):
         if os.path.exists("dist"):
             for file in os.listdir("dist"):
                 shutil.move(os.path.join("dist", file), os.path.join(OUTPUT_DIR, file))
+                
 
 setup(
     name='sparkbasics',
     version='1.0.0',
     description='BDCC Pyspark Basics project',
-    py_modules=['__main__'],
-    packages=find_packages(where='src'),
-    package_dir={'': 'src'},
+    packages=find_packages(where='src/main/python'),
+    package_dir={'': 'src/main/python'},
     zip_safe=False,
     cmdclass={
         'bdist_egg': bdist_egg,

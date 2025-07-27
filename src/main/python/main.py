@@ -44,7 +44,7 @@ df_hotels_weather_encrypted = encryption_service.encrypt_fields(
 )
 
 #Store enriched data
-df_hotels_weather_encrypted.write.mode("overwrite").parquet(
+df_hotels_weather_encrypted.write.mode("append").parquet(
     f"wasbs://{app_config['AZURE_CONTAINER_NAME']}@{app_config['AZURE_STORAGE_ACCOUNT_NAME'] }.blob.core.windows.net/enriched_data"
 )
 

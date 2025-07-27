@@ -1,10 +1,23 @@
 #!/bin/bash
+
+set -euo pipefail
+
+if [ $# -ne 1 ]; then
+  exit 1
+fi
+
+IMAGE_FULL="$1"
+
+echo "Submitting Spark job to AKS with image: $IMAGE_FULL"
+
 /opt/spark/bin/spark-submit \
     --master k8s://https://bdccdev-zo9y584k.hcp.westeurope.azmk8s.io:443 \
     --deploy-mode cluster \
     --name sparkbasics \
-    --conf spark.kubernetes.container.image=acrdevwesteurope9lmi.azurecr.io/spark-python-06:latest \
+    --conf spark.kubernetes.container.image="$IMAGE_FULL" \
     --conf spark.kubernetes.container.image.pullPolicy=Always \
+    --conf "spark.executorEnv.PYTHONPATH=/opt/src/main/python:/opt/sparkbasics-1.0.0-py3.12.egg" \
+    --conf "spark.driverEnv.PYTHONPATH=/opt/src/main/python:/opt/sparkbasics-1.0.0-py3.12.egg" \
     --conf spark.kubernetes.driver.request.cores=500m \
     --conf spark.kubernetes.driver.request.memory=500m \
     --conf spark.kubernetes.executor.request.memory=500m \
@@ -23,7 +36,7 @@
     --conf spark.kubernetes.driverEnv.STORAGE_WEATHER_SUBPATH=m06sparkbasics/weather \
     --conf spark.kubernetes.driverEnv.STORAGE_HOTELS_SUBPATH=m06sparkbasics/hotels \
     --conf spark.kubernetes.driverEnv.OPENCAGE_API_KEY=<OPENCAGE_API_KEY> \
-    --conf spark.kubernetes.executorEnv.AZURE_STORAGE_ACCOUNT_NAME=stdevwesteuropeykw2 \
+    --conf spark.kubernetes.executorEnv.AZURE_STORAGE_ACCOUNT_NAME=stdevwesteurope9lmi \
     --conf spark.kubernetes.executorEnv.AZURE_STORAGE_ACCOUNT_KEY=<STORAGE_ACCOUNT_KEY> \
     --conf spark.kubernetes.executorEnv.AZURE_CONTAINER_NAME=data \
     --conf spark.kubernetes.executorEnv.AES_ENCRYPTION_KEY=<KEY_FOR_PII_FIELDS_ENCRYPTION> \

@@ -1,6 +1,6 @@
 from pyspark.sql.functions import expr
 from pyspark.sql import DataFrame
-import src.main.python.app_config as app_config
+from app_config import app_config
 
 class EncryptionService:
     def __init__(self):
