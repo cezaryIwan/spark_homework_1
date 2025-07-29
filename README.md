@@ -377,6 +377,10 @@ My image locally and on ACR have identical "digest", so they have to be identica
 <img width="809" height="38" alt="image" src="https://github.com/user-attachments/assets/e318778b-b1cb-4653-8534-a9b5ac73a273" /> <br>
 Different error is thrown with snippet of updated code, so image updates correctly: <br>
 <img width="600" height="151" alt="image" src="https://github.com/user-attachments/assets/1ade48d2-ac7c-41bd-ba2d-d6ea4525dd84" /> <br>
+12. Corrected paths in import, so that executer pods can see app's files <br>
+13. Spotted problem with geohash, so added integrational test with spark.local() to debug it locally <br>
+14. Corrected save mode for blob storage <br>
+15. Added script for full workflow with building, pushing image and submitting spark job <br>
 
 
 
