@@ -381,10 +381,20 @@ Different error is thrown with snippet of updated code, so image updates correct
 13. Spotted problem with geohash, so added integrational test with spark.local() to debug it locally <br>
 14. Corrected save mode for blob storage <br>
 15. Added script for full workflow with building, pushing image and submitting spark job <br>
-
-
-
-
-
-
-
+16. Now ETL job is tested, but didn't work: <br>
+  a) storage paths(solution in commit "spark submit fixes" in spark session builder) <br>
+  b) deleteing old temporary(solution in commit "spark submit fixes" in spark_submit.sh) <br>
+17. Job completed: <br>
+<img width="635" height="171" alt="image" src="https://github.com/user-attachments/assets/3d2f8e10-e98a-4e60-aef9-159eab7bf880" /> <br>
+Results: <br>
+<img width="575" height="334" alt="image" src="https://github.com/user-attachments/assets/64595d9f-e561-4a25-90e2-1eb310320005" /> <br>
+<img width="807" height="755" alt="image" src="https://github.com/user-attachments/assets/a02fb5f4-3012-4b87-9981-fd86601d73a9" /> <br>
+<img width="713" height="472" alt="image" src="https://github.com/user-attachments/assets/9a84b167-692a-4cad-aca8-c9c9d26a8eac" /> <br>
+<img width="1830" height="597" alt="image" src="https://github.com/user-attachments/assets/41d898b9-191f-4c7d-9516-3df137f7cf10" /> <br>
+Remarks: <br>
+  a) Geohash may be the same for simmilar coordinates <br>
+  b) Since it is left join, if no weather data with the same, or simmilar coordinates is found, it's data is "None" <br>
+  c) Due to weather API limitations, a lot of hotel data might have empty values: <br>
+<img width="686" height="562" alt="image" src="https://github.com/user-attachments/assets/0ea17db7-16e3-4cfc-b62e-f53d5f6b56e3" /> <br>
+  d) Temporary files are not deleted, switching automatic deletion was a fix for problem 16.b) <br>
+  e) Enriched data is partitioned by countries <br>
