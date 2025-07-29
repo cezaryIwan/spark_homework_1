@@ -6,14 +6,14 @@ from pyspark.sql import SparkSession
 
 def test_fill_null_lat_lng_with_local_csv():
     spark = SparkSession.builder \
-            .master("local[1]") \
-            .appName("PII Encryption Test") \
+            .master('local[1]') \
+            .appName('PII Encryption Test') \
             .getOrCreate()
     csv_path = 'src/test/resources/test_data_hotel_null_lat_lng.csv'
     df_hotels = spark\
-        .read.option("header", True).csv(csv_path)\
-        .withColumnRenamed("Latitude", "lat")\
-        .withColumnRenamed("Longitude", "lng")
+        .read.option('header', True).csv(csv_path)\
+        .withColumnRenamed('Latitude', 'lat')\
+        .withColumnRenamed('Longitude', 'lng')
         
     coordinates_service = CoordinatesService()
     df_result = coordinates_service.fill_null_lat_lng(df_hotels)

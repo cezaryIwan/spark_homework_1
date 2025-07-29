@@ -28,6 +28,7 @@ echo "Submitting Spark job to AKS with image: $IMAGE_FULL"
     --conf spark.kubernetes.executor.instances=1 \
     --conf spark.pyspark.python=python3 \
     --conf spark.pyspark.driver.python=python3 \
+    --conf spark.hadoop.mapreduce.fileoutputcommitter.cleanup.skipped=true \
     --conf spark.kubernetes.driverEnv.AZURE_STORAGE_ACCOUNT_NAME=<STORAGE_ACCOUNT_NAME> \
     --conf spark.kubernetes.driverEnv.AZURE_STORAGE_ACCOUNT_KEY=<STORAGE_ACCOUNT_KEY> \
     --conf spark.kubernetes.driverEnv.AZURE_CONTAINER_NAME=data \
@@ -46,3 +47,4 @@ echo "Submitting Spark job to AKS with image: $IMAGE_FULL"
     --conf spark.kubernetes.executorEnv.OPENCAGE_API_KEY=<OPENCAGE_API_KEY> \
     --py-files local:///opt/sparkbasics-1.0.0-py3.12.egg \
     local:///opt/src/main/python/main.py
+    

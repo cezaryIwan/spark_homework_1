@@ -35,20 +35,22 @@ def main():
     # Create Spark session
     spark = SparkSession.builder.appName('Hotel-Weather ETL Job')\
         .config('spark.jars.packages', 'org.apache.hadoop:hadoop-azure:3.3.4,com.microsoft.azure:azure-storage:8.6.6')\
+        .config('spark.speculation', 'false') \
+        .config('spark.hadoop.mapreduce.fileoutputcommitter.algorithm.version', '2') \
         .getOrCreate()
     spark.conf.set(
-        f'fs.azure.account.key.{app_config['AZURE_STORAGE_ACCOUNT_NAME']}.blob.core.windows.net',
+        f"fs.azure.account.key.{app_config['AZURE_STORAGE_ACCOUNT_NAME']}.blob.core.windows.net",
         app_config['AZURE_STORAGE_ACCOUNT_KEY']
     )
 
     hotels_path = app_config['STORAGE_PATH'] + app_config['STORAGE_HOTELS_SUBPATH']
     weather_path = app_config['STORAGE_PATH'] + app_config['STORAGE_WEATHER_SUBPATH']
-    output_path = f'wasbs://{app_config['AZURE_CONTAINER_NAME']}@{app_config['AZURE_STORAGE_ACCOUNT_NAME']}.blob.core.windows.net/enriched_data'
+    output_path = f"wasbs://{app_config['AZURE_CONTAINER_NAME']}@{app_config['AZURE_STORAGE_ACCOUNT_NAME']}.blob.core.windows.net/enriched_data"
 
     df_result = run_etl_pipeline(spark, hotels_path, weather_path)
 
     # Store enriched data
-    df_result.write.mode('append').partitionBy("Country").parquet(output_path)
+    df_result.write.mode('append').partitionBy('Country').parquet(output_path)
 
     spark.stop()
 

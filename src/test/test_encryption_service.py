@@ -2,19 +2,19 @@ import pytest
 from pyspark.sql import SparkSession
 from src.main.python.services.encryption_service import EncryptionService
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope='module')
 def spark():
     return SparkSession.builder \
-        .master("local[1]") \
-        .appName("PII Encryption Test") \
+        .master('local[1]') \
+        .appName('PII Encryption Test') \
         .getOrCreate()
 
 def test_encrypt_pii_fields(spark):
-    csv_path = "src/test/resources/test_data_hotel.csv"
+    csv_path = 'src/test/resources/test_data_hotel.csv'
     df = spark\
-        .read.option("header", True).csv(csv_path)\
-        .withColumnRenamed("Latitude", "lat")\
-        .withColumnRenamed("Longitude", "lng")
+        .read.option('header', True).csv(csv_path)\
+        .withColumnRenamed('Latitude', 'lat')\
+        .withColumnRenamed('Longitude', 'lng')
         
     encryption_service = EncryptionService()
 
@@ -30,5 +30,5 @@ def test_encrypt_pii_fields(spark):
             assert original_values != encrypted_values
             assert all(v is not None for v in encrypted_values)
 
-    assert df.select("lat").collect() == encrypted_df.select("lat").collect()
-    assert df.select("lng").collect() == encrypted_df.select("lng").collect()
+    assert df.select('lat').collect() == encrypted_df.select('lat').collect()
+    assert df.select('lng').collect() == encrypted_df.select('lng').collect()
